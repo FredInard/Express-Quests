@@ -43,7 +43,7 @@ const getUsersById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("select * from movies where id = ?", [id])
+    .query("select * from users where id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.json(users[0]);
@@ -94,7 +94,26 @@ const updateUser = (req, res) => {
       console.error(err);
       res.status(500).send("Error editing the User");
     });
+
 };
+
+const deleteUser = (req, res) => {
+  const id = parseInt(req.params.id);
+  
+  database
+  .query("delete from users where id = ?", [id])
+  .then(([result]) => {
+    if (result.affectedRows === 0) {
+      res.status(404).send("Not Found");
+    } else {
+      res.sendStatus(204);
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send("Error deleting the user");
+  });
+}
 
 
 
@@ -102,5 +121,6 @@ module.exports = {
   getUsers,
   getUsersById,
   postUser,
-  updateUser
+  updateUser,
+  deleteUser
 };
